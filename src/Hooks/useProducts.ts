@@ -1,4 +1,4 @@
-import { Products } from "../interfaces/products";
+import { Products } from "../interfaces/product";
 import { useQuery } from "react-query";
 
 async function fetchProducts() {

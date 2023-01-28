@@ -3,6 +3,7 @@ import { useFavoriteProductsStore } from "../store/favoriteProducts";
 import Loading from "../components/Loading";
 import FavoriteCardItems from "../components/FavoriteCardItems";
 import { Link } from "react-router-dom";
+import { IoIosArrowBack } from "react-icons/io";
 
 export default function FavoritesPage() {
   const { productFavotite } = useFavoriteProductsStore((state) => state);
@@ -11,17 +12,20 @@ export default function FavoritesPage() {
   if (isLoading) return <Loading />;
 
   return (
-    <div className="py-12 container mx-auto">
+    <div className="py-12 container mx-auto px-10">
       <div className="sm:flex flex-col justify-start items-start">
         <Link to="/">
-          <p className="pb-4 px-5 tracking-[1px]">Back</p>
+          <p className="px-5 pb-5 tracking-[1px] flex flex-row items-center">
+            <IoIosArrowBack className="mr-1" />
+            Back
+          </p>
         </Link>
         <div className="pl-4 flex flex-row justify-center items-end space-x-4">
           <h1 className="text-4xl font-semibold leading-9 text-gray-800">
             Favorites
           </h1>
           <p className="text-base leading-4 text-gray-600 pb-1">
-            {productFavotite.length} Items
+            ({productFavotite.length} Items)
           </p>
         </div>
         <table className="w-full mt-16 whitespace-nowrap">

@@ -1,12 +1,19 @@
-import { Products } from "../interfaces/products";
+import { useProducts } from "../Hooks/useProducts";
+import { Product } from "../interfaces/product";
 import { useFavoriteProductsStore } from "../store/favoriteProducts";
+import { useProductInCart } from "../store/productInCart";
 
 type Props = {
-  product: Products;
+  product: Product;
 };
 
 export default function ProductCard({ product }: Props) {
   const { image, title, price, id } = product;
+
+  const { addProductInCart, productInCart: cart } = useProductInCart(
+    (state) => state
+  );
+  const { data: products } = useProducts();
 
   const { addFavoriteProducts, removeFavoriteProducts, productFavotite } =
     useFavoriteProductsStore((state) => state);
@@ -21,6 +28,13 @@ export default function ProductCard({ product }: Props) {
     addFavoriteProducts(id);
   };
 
+  const handleAddProducts = (id: number) => {
+    let newItem = products?.find((item) => item.id === id);
+    let itemInCart = cart.find((item) => item.id === newItem?.id);
+
+    addProductInCart(newItem!, itemInCart!);
+  };
+
   return (
     <div className="relative">
       <div className="relative group bg-white h-[500px] flex items-center shadow-lg">
@@ -31,7 +45,10 @@ export default function ProductCard({ product }: Props) {
           alt="img"
         />
         <div className=" absolute bottom-0 p-8 w-full opacity-0 group-hover:opacity-100">
-          <button className=" font-medium text-base leading-4 text-gray-800 bg-white py-3 w-full">
+          <button
+            onClick={() => handleAddProducts(id)}
+            className=" font-medium text-base leading-4 text-gray-800 bg-white py-3 w-full"
+          >
             Add to cart
           </button>
           <button

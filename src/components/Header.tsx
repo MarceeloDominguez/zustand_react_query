@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MdOutlineFavoriteBorder } from "react-icons/md";
 import { BsCart } from "react-icons/bs";
 import { RxHamburgerMenu } from "react-icons/rx";
@@ -7,17 +7,31 @@ import { Link } from "react-router-dom";
 
 export default function Header() {
   const [showMenu, setShowMenu] = useState(false);
+  const [header, setHeader] = useState(false);
+
+  useEffect(() => {
+    window.addEventListener("scroll", () => {
+      window.scrollY > 50 ? setHeader(true) : setHeader(false);
+    });
+  }, []);
 
   return (
-    <div className="dark:bg-gray-900">
+    <div
+      className={`${
+        header ? "bg-gray-200 shadow-lg" : "bg-transparent"
+      } fixed z-50 w-full transition-all duration-400`}
+    >
       <div className="container mx-auto relative">
-        <div className="py-4 mx-4 md:mx-6">
-          <div className="flex items-center justify-end py-4">
+        <div className="py-5 mx-4 md:mx-6 ">
+          <div className="flex items-center justify-between py-4 lg:px-14">
+            <h1 className="font-bold tracking-[3px] text-[24px]">Shop</h1>
             <div className="hidden md:flex items-center space-x-4">
               <Link to="favorite">
                 <MdOutlineFavoriteBorder className="text-2xl" />
               </Link>
-              <BsCart className="text-2xl" />
+              <Link to="productInCart">
+                <BsCart className="text-2xl" />
+              </Link>
             </div>
             <div className="md:hidden">
               <button
@@ -25,37 +39,47 @@ export default function Header() {
                 onClick={() => setShowMenu(true)}
                 className="focus:outline-none focus:ring-2 focus:ring-gray-800 rounded"
               >
-                <RxHamburgerMenu />
+                <RxHamburgerMenu size={30} />
               </button>
             </div>
           </div>
         </div>
         <div
-          id="mobile-menu"
+          //id="mobile-menu"
           className={`${
             showMenu ? "flex" : "hidden"
-          } dark:bg-gray-900 md:hidden absolute inset-0 z-10 flex-col w-full h-screen bg-white pt-6`}
+          }  md:hidden absolute inset-0 z-10 flex-col w-full h-screen bg-gray-200 pt-6`}
         >
           <div className="w-full">
             <div className="flex items-center justify-end mx-4">
               <button
                 aria-label="close menu"
                 onClick={() => setShowMenu(false)}
-                className="text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-gray-800"
+                className="text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-gray-800 mt-3"
               >
-                <IoIosAdd />
+                <IoIosAdd size={30} />
               </button>
             </div>
           </div>
           <div className="w-full h-full flex items-end">
-            <ul className="bg-gray-50 dark:bg-gray-800 py-10 px-4 flex flex-col space-y-8 w-full">
-              <li className="flex items-center">
-                <MdOutlineFavoriteBorder />
-                Favorites
+            <ul className="bg-gray-300 py-10 px-4 flex flex-col space-y-8 w-full">
+              <li>
+                <Link
+                  to="/favorite"
+                  className="flex items-center gap-x-2 text-[22px]"
+                >
+                  <MdOutlineFavoriteBorder />
+                  Favorites
+                </Link>
               </li>
-              <li className="flex items-center">
-                <BsCart />
-                Cart
+              <li>
+                <Link
+                  to="/productInCart"
+                  className="flex items-center gap-x-2 text-[22px]"
+                >
+                  <BsCart />
+                  Cart
+                </Link>
               </li>
             </ul>
           </div>
