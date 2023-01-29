@@ -1,19 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { MdOutlineFavoriteBorder } from "react-icons/md";
 import { BsCart } from "react-icons/bs";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { IoIosAdd } from "react-icons/io";
 import { Link } from "react-router-dom";
+import { useProductInCart } from "../store/productInCart";
+import { BsFillHeartFill } from "react-icons/bs";
 
 export default function Header() {
   const [showMenu, setShowMenu] = useState(false);
   const [header, setHeader] = useState(false);
+  const { productInCart } = useProductInCart((state) => state);
 
   useEffect(() => {
     window.addEventListener("scroll", () => {
       window.scrollY > 50 ? setHeader(true) : setHeader(false);
     });
   }, []);
+
+  const numberOfItemInCart = productInCart.reduce((acc, item) => {
+    return acc + item.quantity;
+  }, 0);
 
   return (
     <div
@@ -27,10 +33,13 @@ export default function Header() {
             <h1 className="font-bold tracking-[3px] text-[24px]">Shop</h1>
             <div className="hidden md:flex items-center space-x-4">
               <Link to="favorite">
-                <MdOutlineFavoriteBorder className="text-2xl" />
+                <BsFillHeartFill className="text-2xl text-red-500" />
               </Link>
-              <Link to="productInCart">
+              <Link to="productInCart" className="flex relative">
                 <BsCart className="text-2xl" />
+                <p className="absolute left-[15px] -top-[12px] text-black text-sm font-bold">
+                  {numberOfItemInCart}
+                </p>
               </Link>
             </div>
             <div className="md:hidden">
@@ -68,7 +77,7 @@ export default function Header() {
                   to="/favorite"
                   className="flex items-center gap-x-2 text-[22px]"
                 >
-                  <MdOutlineFavoriteBorder />
+                  <BsFillHeartFill className="text-red-500" />
                   Favorites
                 </Link>
               </li>

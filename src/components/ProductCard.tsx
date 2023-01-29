@@ -35,6 +35,8 @@ export default function ProductCard({ product }: Props) {
     addProductInCart(newItem!, itemInCart!);
   };
 
+  const productInCartTextButton = cart.find((item) => item.id === id);
+
   return (
     <div className="relative">
       <div className="relative group bg-white h-[500px] flex items-center shadow-lg">
@@ -46,10 +48,13 @@ export default function ProductCard({ product }: Props) {
         />
         <div className=" absolute bottom-0 p-8 w-full opacity-0 group-hover:opacity-100">
           <button
+            disabled={productInCartTextButton?.id ? true : false}
             onClick={() => handleAddProducts(id)}
-            className=" font-medium text-base leading-4 text-gray-800 bg-white py-3 w-full"
+            className={`${
+              productInCartTextButton ? "opacity-50" : "opacity-none"
+            } font-medium text-base leading-4 text-gray-800 bg-white py-3 w-full`}
           >
-            Add to cart
+            {productInCartTextButton?.id ? "Product In Cart" : "Add to cart"}
           </button>
           <button
             onClick={toggleFavorite}

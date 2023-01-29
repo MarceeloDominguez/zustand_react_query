@@ -8,6 +8,8 @@ type State = {
 
 type Actions = {
   addProductInCart: (newItem: Product, itemInCart: Product) => void;
+  removeAllFromCart: (id: number) => void;
+  removeOneFromCart: (id: number, itemToDelete: Product) => void;
 };
 
 export const useProductInCart = create(
@@ -31,6 +33,28 @@ export const useProductInCart = create(
                 ...state.productInCart,
                 { ...newItem, quantity: 1 },
               ],
+            }));
+      },
+
+      removeAllFromCart: (id: number) =>
+        set((state) => ({
+          ...state,
+          productInCart: state.productInCart.filter((item) => item.id !== id),
+        })),
+
+      removeOneFromCart: (id: number, itemToDelete: Product) => {
+        return itemToDelete.quantity > 1
+          ? set((state) => ({
+              ...state,
+              productInCart: state.productInCart.map((item) =>
+                item.id === id ? { ...item, quantity: item.quantity - 1 } : item
+              ),
+            }))
+          : set((state) => ({
+              ...state,
+              productInCart: state.productInCart.filter(
+                (item) => item.id !== id
+              ),
             }));
       },
     }),

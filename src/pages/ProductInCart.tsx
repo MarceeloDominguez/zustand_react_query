@@ -1,9 +1,44 @@
 import { Link } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
+import { BsFillStarFill } from "react-icons/bs";
 import { useProductInCart } from "../store/productInCart";
+import { useProducts } from "../Hooks/useProducts";
 
 export default function ProductInCart() {
-  const { productInCart } = useProductInCart((state) => state);
+  const {
+    productInCart,
+    removeAllFromCart,
+    addProductInCart,
+    removeOneFromCart,
+  } = useProductInCart((state) => state);
+
+  const { data: products } = useProducts();
+
+  let shipping = 50;
+  let tax = 35;
+
+  const handleAddProducts = (id: number) => {
+    let newItem = products?.find((item) => item.id === id);
+    let itemInCart = productInCart.find((item) => item.id === newItem?.id);
+
+    addProductInCart(newItem!, itemInCart!);
+  };
+
+  const handleDeleteFromCart = (id: number, all = false) => {
+    if (all) {
+      removeAllFromCart(id);
+    } else {
+      console.log("eliminar de a un item...");
+      let itemToDelete = productInCart.find((item) => item.id === id);
+      removeOneFromCart(id, itemToDelete!);
+    }
+  };
+
+  const priceTotal = productInCart.reduce((acc, item) => {
+    return acc + item.quantity * item.price;
+  }, 0);
+
+  const priceFinal = priceTotal + shipping + tax;
 
   return (
     <div className="bg-white-500 container mx-auto">
@@ -41,15 +76,20 @@ export default function ProductInCart() {
                       {item.title}
                     </p>
                     <div className="flex gap-x-2">
-                      <button>-</button>
-                      <p>5</p>
-                      <button>+</button>
+                      <button onClick={() => handleDeleteFromCart(item.id)}>
+                        -
+                      </button>
+                      <p>{item.quantity}</p>
+                      <button onClick={() => handleAddProducts(item.id)}>
+                        +
+                      </button>
                     </div>
                   </div>
                   <p className="text-xs leading-3 text-gray-600 pt-2">
                     {item.category}
                   </p>
-                  <p className="text-xs leading-3 text-gray-600 py-4">
+                  <p className="text-xs leading-3 text-gray-600 py-4 flex gap-x-1">
+                    <BsFillStarFill color="orange" />
                     {item.rating.rate}
                   </p>
                   <p className="lg:w-96 md:w-auto text-xs leading-3 text-gray-600">
@@ -57,9 +97,12 @@ export default function ProductInCart() {
                   </p>
                   <div className="flex items-center justify-between pt-5 pr-6">
                     <div className="flex itemms-center">
-                      <p className="text-xs leading-3 text-red-500 cursor-pointer">
+                      <button
+                        onClick={() => handleDeleteFromCart(item.id, true)}
+                        className="text-xs leading-3 text-red-500 cursor-pointer"
+                      >
                         Remove
-                      </p>
+                      </button>
                     </div>
                     <p className="text-base font-black leading-none text-gray-800">
                       ${item.price}
@@ -78,22 +121,26 @@ export default function ProductInCart() {
               </p>
               <div className="flex items-center justify-between pt-16">
                 <p className="text-base leading-none text-gray-800">Subtotal</p>
-                <p className="text-base leading-none text-gray-800">$9,000</p>
+                <p className="text-base leading-none text-gray-800">
+                  ${priceTotal.toString().slice(0, 7)}
+                </p>
               </div>
               <div className="flex items-center justify-between pt-5">
                 <p className="text-base leading-none text-gray-800">Shipping</p>
-                <p className="text-base leading-none text-gray-800">$30</p>
+                <p className="text-base leading-none text-gray-800">
+                  ${shipping}
+                </p>
               </div>
               <div className="flex items-center justify-between pt-5">
                 <p className="text-base leading-none text-gray-800">Tax</p>
-                <p className="text-base leading-none text-gray-800">$35</p>
+                <p className="text-base leading-none text-gray-800">${tax}</p>
               </div>
             </div>
             <div>
               <div className="flex items-center pb-6 justify-between lg:pt-5 pt-20">
                 <p className="text-2xl leading-normal text-gray-800">Total</p>
                 <p className="text-2xl font-bold leading-normal text-right text-gray-800">
-                  $10,240
+                  ${priceFinal.toString().slice(0, 7)}
                 </p>
               </div>
               <button className="text-base leading-none w-full py-5 bg-gray-800 border-gray-800 border focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 text-white">

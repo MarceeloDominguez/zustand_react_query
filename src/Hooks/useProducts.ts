@@ -1,4 +1,4 @@
-import { Products } from "../interfaces/product";
+import { Product } from "../interfaces/product";
 import { useQuery } from "react-query";
 
 async function fetchProducts() {
@@ -9,5 +9,5 @@ async function fetchProducts() {
 }
 
 export function useProducts() {
-  return useQuery<Products[]>("products", fetchProducts);
+  return useQuery<Product[]>("products", fetchProducts);
 }
