@@ -41,7 +41,7 @@ export default function ProductInCart() {
   const priceFinal = priceTotal + shipping + tax;
 
   return (
-    <div className="bg-white-500 container mx-auto">
+    <div className="bg-white-500 container mx-auto overflow-hidden">
       <div className="flex md:flex-row flex-col justify-end">
         <div className="w-full md:pl-10 pl-4 pr-10 md:pr-4 md:py-12 py-8 bg-white mx-5">
           <Link to="/">
@@ -51,7 +51,7 @@ export default function ProductInCart() {
             </p>
           </Link>
           <p className="text-5xl font-black leading-10 text-gray-800 pt-3 pb-6">
-            Bag
+            Products
           </p>
 
           {productInCart.map((item) => {
@@ -113,8 +113,8 @@ export default function ProductInCart() {
             );
           })}
         </div>
-        <div className="md:w-1/3 xl:w-1/4 w-full bg-gray-300 h-full mt-16">
-          <div className="flex flex-col md:h-screen px-14 py-20 justify-between">
+        <div className="md:w-1/3 xl:w-1/4 w-full h-full mt-16 mb-16">
+          <div className="flex flex-col h-[70vh] px-14 py-20 justify-between lg:fixed md:fixed bg-gray-300">
             <div>
               <p className="text-4xl font-black leading-9 text-gray-800">
                 Summary
